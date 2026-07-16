@@ -1,0 +1,39 @@
+# Drumbeat Live Trial Runner — Real News
+
+This runs daily and updates your Netlify temp site with real news, $0.55/issue.
+
+**Only 2 emails allowed:** corrections@thedailydrumbeat.com and editor@thedailydrumbeat.com — already enforced.
+
+**FREE APIs used:**
+- 30yr Mortgage: FRED MORTGAGE30US — get free key at https://fred.stlouisfed.org/docs/api/api_key.html
+- Bitcoin/Ethereum: CoinGecko — no key needed
+- Markets: Finnhub free or static fallback
+- Sports: ESPN API — no key
+- News: RSS (TheGrio, Black Enterprise, HBCU Gameday, UNCF) — no key, no cost. Brave + Gemini optional.
+
+**How to run trial for 2 days:**
+
+1. Create free GitHub repo, upload this folder + drumbeat-netlify-package folder
+2. In GitHub > Settings > Secrets and variables > Actions > Add:
+   - FRED_API_KEY (free)
+   - NETLIFY_AUTH_TOKEN (from Netlify User settings > Applications > Personal access tokens)
+   - NETLIFY_SITE_ID (from Netlify Site settings > General > Site ID)
+   - BRAVE_API_KEY and GEMINI_API_KEY are optional — trial works without them using RSS only.
+
+3. Go to Actions tab > Run workflow — it generates today's issue into /issues/YYYY-MM-DD/
+
+4. Netlify auto-deploys, your temp link like drumbeat-test-2026.netlify.app shows fresh news.
+
+**Cost for trial:**
+- RSS + FRED + CoinGecko + ESPN = $0
+- GitHub Actions = free 2000 min/month
+- Netlify second site = free
+- Total for 2-3 day trial = $0
+
+**Netlify hosting without affecting live site:**
+Netlify allows multiple sites. Deploying drumbeat-netlify-package as new site does NOT overwrite thedailydrumbeat.com. It creates a new URL.
+
+To share with friends: Send the new URL.
+
+**Emails:**
+Only corrections@ and editor@ are in code. All other emails removed per your request.
