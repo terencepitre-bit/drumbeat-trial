@@ -1,4 +1,4 @@
-name: Daily Drumbeat V2 - Live All - FIXED
+name: Daily Drumbeat V2 - Live All - Netlify CLI
 on:
   schedule:
     - cron: '0 10 * * *'
@@ -12,19 +12,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install deps
+      - name: Install Python deps
         run: pip install feedparser requests
-      - name: Build fresh issue - LIVE FRED + Finnhub + CoinGecko
+      - name: Build FINAL - Fresh African American stories + Live money
         run: python generate_issue.py
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
-      - name: Deploy to Netlify - Live
-        uses: nwtgck/actions-netlify@v3.0
-        with:
-          publish-dir: '.'
-          production-deploy: true
-          deploy-message: "Daily ${{ github.run_number }} - Live mortgage + Black stocks"
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+      - name: Deploy to Netlify - Production
+        run: netlify deploy --dir=. --prod --message="Daily ${{ github.run_number }} - Fresh + Live"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
