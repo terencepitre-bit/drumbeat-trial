@@ -1,25 +1,24 @@
 name: Daily Drumbeat Live Trial
 on:
   schedule:
-    - cron: '0 10 * * *'
+    - cron: '0 10:00 * * *'
   workflow_dispatch:
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install feedparser requests jinja2 python-dateutil
-      - name: Generate issue
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python generate_issue.py
+      - run: pip install feedparser requests jinja2
+      - run: python generate_issue.py
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: '.'
+          production-deploy: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
