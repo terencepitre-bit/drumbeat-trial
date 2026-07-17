@@ -1,6 +1,2 @@
-[build]
-  publish = "."
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Drumbeat Trial - Fixed
+This is the clean package. Only 2 emails in footer.
