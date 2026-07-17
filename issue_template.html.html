@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE DAILY DRUMBEAT — {{ day_name }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root { --paper:#fdfaf3; --ink:#111; --red:#9B2226; --rule:#111; }
+body { background:var(--paper); color:var(--ink); font-family: Georgia, serif; margin:0; }
+.container { max-width:1100px; margin:0 auto; padding:12px 16px 40px; background:var(--paper); }
+.masthead { text-align:center; border-bottom:3px double var(--rule); padding-bottom:10px; margin-bottom:6px; }
+.masthead h1 { font-family:'Playfair Display', serif; font-weight:900; font-size:3.2rem; letter-spacing:0.02em; margin:0; line-height:1; }
+.masthead h1 span.r { color:var(--red); }
+.tag { font-style:italic; color:#555; margin:6px 0; font-size:0.95em; }
+.meta { display:flex; justify-content:space-between; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:6px 0; font-family:Inter, sans-serif; font-size:0.7em; letter-spacing:0.12em; font-weight:600; text-transform:uppercase; }
+.live-badge { background:var(--red); color:white; padding:2px 8px; border-radius:3px; }
+.grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; margin-top:14px; }
+@media (max-width: 800px){ .grid{ grid-template-columns:1fr; } }
+.section { margin-bottom:22px; }
+.section-head { font-family:Inter, sans-serif; font-weight:700; font-size:0.8em; letter-spacing:0.14em; text-transform:uppercase; border-bottom:2px solid var(--rule); padding-bottom:4px; margin-bottom:8px; display:flex; justify-content:space-between; }
+.section-head .p { color:var(--red); }
+.story { margin:10px 0; padding-bottom:10px; border-bottom:1px solid #e8dfc8; }
+.story .kicker { font-family:Inter, sans-serif; font-size:0.65em; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--red); }
+.story .title { font-family:'Playfair Display', serif; font-weight:700; font-size:1.05em; line-height:1.25; margin:2px 0 4px; }
+.story .summary { font-size:0.9em; line-height:1.5; color:#222; }
+.story a { color:var(--red); font-size:0.8em; word-break:break-all; text-decoration:none; border-bottom:1px dotted var(--red); }
+.market-box { background:#fff; border:1px solid #ddd; padding:10px; font-family:Inter, sans-serif; font-size:0.8em; }
+.timestamp { text-align:center; background:#111; color:#fff; font-family:Inter, sans-serif; font-size:0.7em; letter-spacing:0.12em; padding:8px; margin:-12px -16px 12px -16px; }
+.footer { margin-top:30px; border-top:3px double var(--rule); padding-top:12px; font-size:0.8em; color:#555; text-align:center; font-family:Inter, sans-serif; }
+</style>
+</head>
+<body>
+<div class="timestamp">🔴 LIVE EDITION — {{ day_name }} — BUILT {{ time_str }} ET — BUILD #{{ no }} — FRESH RSS PULL</div>
+<div class="container">
+<div class="masthead">
+<h1>THE DAILY <span class="r">D</span>RUMBEAT</h1>
+<div class="tag">News about us. For us. By the beat of the drum.</div>
+<div class="meta">
+<span>Vol. {{ vol }}, No. {{ no }} — {{ day_name }}</span>
+<span class="live-badge">LIVE TRIAL — AUTO UPDATES 6AM ET</span>
+<span>{{ date_str }}</span>
+</div>
+</div>
+
+<div class="grid">
+<div>
+<div class="section">
+<div class="section-head"><span><span class="p">P1</span> Business & Enterprise</span><span style="font-weight:400; text-transform:none;">{{ time_str }}</span></div>
+{% for item in business %}
+<div class="story">
+<div class="kicker">Live RSS • {{ item.published[:10] if item.published else date_str }}</div>
+<div class="title">{{ item.title }}</div>
+<a href="{{ item.link }}" target="_blank">Source → {{ item.link[:80] }}...</a>
+</div>
+{% endfor %}
+{% if not business %}<div class="story">Checking business wires at {{ time_str }}...</div>{% endif %}
+</div>
+
+<div class="section">
+<div class="section-head"><span><span class="p">P2</span> Policy & Justice</span></div>
+{% for item in policy %}
+<div class="story">
+<div class="kicker">Live • {{ time_str }}</div>
+<div class="title">{{ item.title }}</div>
+<a href="{{ item.link }}" target="_blank">{{ item.link[:80] }}...</a>
+</div>
+{% endfor %}
+</div>
+</div>
+
+<div>
+<div class="section">
+<div class="section-head"><span><span class="p">P4</span> Money Moves</span><span style="color:green;">FREE APIs</span></div>
+<div class="market-box">
+<div><strong>30-Yr Mortgage {{ mortgage }}%</strong> [FRED]</div>
+<div>Bitcoin <strong>${{ btc }}</strong> • Ethereum <strong>${{ eth }}</strong> [CoinGecko]</div>
+<div style="margin-top:8px; border-top:1px solid #eee; padding-top:6px;">S&P 500 {{ markets.sp500 }} • Dow {{ markets.dow }}<br>UONE {{ markets.uone }}</div>
+<div style="margin-top:8px; font-size:0.75em; color:#666;">Updated {{ time_str }} ET</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-head"><span><span class="p">P5</span> HBCUs & Education</span></div>
+{% for item in hbcu %}
+<div class="story">
+<div class="title" style="font-size:0.95em;">{{ item.title }}</div>
+<a href="{{ item.link }}" target="_blank">Read →</a>
+</div>
+{% endfor %}
+</div>
+
+<div class="section">
+<div class="section-head"><span><span class="p">P11</span> Black Excellence</span></div>
+<div class="story"><div class="title" style="font-size:0.9em;">Bowie State nursing 100% NCLEX pass — second year.</div></div>
+<div class="story"><div class="title" style="font-size:0.9em;">Gabby Thomas 200m meet record 21.83s.</div></div>
+</div>
+
+<div class="section" style="background:#f0ece2; padding:10px;">
+<div class="section-head"><span>The Green Book</span></div>
+<div style="font-size:0.85em;">Business of the Day: The Steam Bar — scalp-focused haircare.<br><br>Opportunity: UNCF STEM Scholarship $5k — deadline Aug 1<br><br><strong>Proof this is fresh:</strong> Built {{ time_str }} ET on {{ date_str }}</div>
+</div>
+</div>
+</div>
+
+<div class="footer">
+<strong>THE DAILY DRUMBEAT</strong> — News about us. For us. By the beat of the drum.<br>
+<a href="/">Home (This Live Edition)</a> | <a href="/trial.html">Original Trial Edition Vol 1 No 5 (Static Beautiful)</a> | <a href="/issues/{{ date_str }}/">Permalink: /issues/{{ date_str }}/</a><br>
+<span style="font-size:0.85em;">Contact: editor@thedailydrumbeat.com | Auto-built via GitHub Actions + RSS + FRED + CoinGecko</span>
+</div>
+
+</div>
+</body>
+</html>
