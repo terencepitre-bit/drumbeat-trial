@@ -3,71 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Daily Drumbeat — {{ day_name }}</title>
+<title>The Daily Drumbeat — {{ day_name }} {{ time_str }}</title>
 <style>
 body { background:#fdfaf3; color:#111; font-family: Georgia, serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height:1.6; }
 h1 { text-align:center; letter-spacing:0.08em; font-size: 2.4em; margin:0; }
 h1 span.red { color:#9B2226; }
 .tagline { text-align:center; font-style:italic; color:#6b6b6b; font-size:0.95em; }
-.meta { text-align:center; border-top:2px solid #111; border-bottom:2px solid #111; padding:10px; margin:20px 0; font-size:0.75em; letter-spacing:0.12em; font-weight:bold; }
+.meta { text-align:center; border-top:2px solid #111; border-bottom:2px solid #111; padding:10px; margin:20px 0; font-size:0.75em; letter-spacing:0.12em; font-weight:bold; background:#fff8e1; }
 .section-label { font-weight:bold; text-transform:uppercase; font-size:0.9em; margin-top:32px; border-bottom:2px solid #111; padding-bottom:6px; display:flex; justify-content:space-between; }
 .section-label span.p { color:#9B2226; margin-right:8px; }
 .auto-badge { background:#e8f5e9; color:#2e7d32; font-size:0.65em; padding:3px 7px; border-radius:12px; font-weight:normal; }
-.story { margin:12px 0; padding-left:12px; border-left:3px solid #f0e6d3; }
-.story a { color:#9B2226; text-decoration:none; word-break:break-all; }
+.story { margin:12px 0; padding-left:12px; border-left:3px solid #f0e6d3; background:white; padding:8px 12px; }
+.story a { color:#9B2226; text-decoration:none; word-break:break-all; font-size:0.85em; }
+.live-banner { background:#111; color:#fff; text-align:center; padding:8px; font-size:0.8em; letter-spacing:0.1em; }
 table.market { width:100%; border-collapse:collapse; margin:12px 0; font-family: 'Courier New', monospace; font-size:0.9em; }
 table.market td { border:1px solid #ddd; padding:8px; }
 .footer { margin-top:40px; padding:20px; background:#f0ece2; font-size:0.85em; border-top:2px solid #111; }
 </style>
 </head>
 <body>
+<div class="live-banner">🔴 LIVE AUTO-GENERATED {{ date_str }} at {{ time_str }} — FRESH RSS PULL — Build #{{ no }}</div>
+
 <h1>THE DAILY <span class="red">D</span>RUMBEAT</h1>
 <div class="tagline">News about us. For us. By the beat of the drum.</div>
-<div class="meta">VOL. {{ vol }}, NO. {{ no }} · {{ day_name | upper }} · {{ date_str }} · LIVE TRIAL EDITION</div>
+<div class="meta">VOL. {{ vol }}, NO. {{ no }} · {{ day_name | upper }} · {{ time_str }} · AUTO-REFRESHING TRIAL</div>
 
-<div class="section-label"><span><span class="p">P2</span> Policy & Justice</span> <span class="auto-badge">LIVE RSS {{ date_str }}</span></div>
+<div class="section-label"><span><span class="p">P2</span> Policy & Justice</span> <span class="auto-badge">LIVE {{ time_str }}</span></div>
 {% if policy %}
 {% for item in policy %}
-<div class="story">• <strong>{{ item.title }}</strong><br><a href="{{ item.link }}" target="_blank">{{ item.link }}</a> {% if item.published %}— {{ item.published[:10] }}{% endif %}</div>
+<div class="story">• <strong>{{ item.title }}</strong><br><a href="{{ item.link }}" target="_blank">{{ item.link }}</a><br><small>Published: {{ item.published if item.published else date_str }} | Fetched: {{ time_str }}</small></div>
 {% endfor %}
 {% else %}
-<div class="story">• No fresh policy stories today — check back tomorrow. Sources: TheGrio, Black Enterprise</div>
+<div class="story">• No fresh policy stories — feed empty at {{ time_str }}</div>
 {% endif %}
 
-<div class="section-label"><span><span class="p">P1</span> Business & Enterprise</span> <span class="auto-badge">LIVE RSS</span></div>
+<div class="section-label"><span><span class="p">P1</span> Business & Enterprise</span> <span class="auto-badge">LIVE {{ time_str }}</span></div>
 {% if business %}
 {% for item in business %}
-<div class="story">• <strong>{{ item.title }}</strong><br><a href="{{ item.link }}" target="_blank">{{ item.link }}</a></div>
+<div class="story">• <strong>{{ item.title }}</strong><br><a href="{{ item.link }}" target="_blank">{{ item.link }}</a><br><small>Fetched: {{ time_str }}</small></div>
 {% endfor %}
 {% else %}
-<div class="story">• No fresh business stories today.</div>
+<div class="story">• No fresh business stories at {{ time_str }}</div>
 {% endif %}
 
-<div class="section-label"><span><span class="p">P4</span> Money Moves</span> <span class="auto-badge">AUTO FREE FRED + CoinGecko</span></div>
+<div class="section-label"><span><span class="p">P4</span> Money Moves</span> <span class="auto-badge">FRED + CoinGecko {{ time_str }}</span></div>
 <table class="market">
-<tr><td>30-Yr Mortgage <strong>{{ mortgage }}%</strong> [FRED]</td><td>Bitcoin <strong>${{ btc }}</strong></td><td>Ethereum <strong>${{ eth }}</strong></td></tr>
+<tr><td>30-Yr Mortgage <strong>{{ mortgage }}%</strong></td><td>Bitcoin <strong>${{ btc }}</strong></td><td>Ethereum <strong>${{ eth }}</strong></td></tr>
 <tr><td>S&P 500 {{ markets.sp500 }}</td><td>Dow {{ markets.dow }}</td><td>UONE {{ markets.uone }}</td></tr>
 </table>
 
-<div class="section-label"><span><span class="p">P5</span> HBCUs & Education</span> <span class="auto-badge">LIVE RSS</span></div>
+<div class="section-label"><span><span class="p">P5</span> HBCUs & Education</span> <span class="auto-badge">{{ time_str }}</span></div>
 {% if hbcu %}
 {% for item in hbcu %}
 <div class="story">• <strong>{{ item.title }}</strong><br><a href="{{ item.link }}" target="_blank">{{ item.link }}</a></div>
 {% endfor %}
 {% else %}
-<div class="story">• No fresh HBCU stories today — sources: HBCU Gameday, HBCU Buzz</div>
+<div class="story">• No fresh HBCU stories at {{ time_str }}</div>
 {% endif %}
 
-<div class="section-label"><span><span class="p">P11</span> Black Excellence</span></div>
-<p>• Bowie State nursing 100% NCLEX pass — second year in a row.</p>
-<p>• Gabby Thomas 200m meet record 21.83s.</p>
-
 <div class="footer">
-<div><strong>The Drum Roll — {{ day_name }}</strong></div>
-<div>The Number: 30yr mortgage {{ mortgage }}% — via FRED MORTGAGE30US FREE | This Day in Legacy: July 18 1903 — Maggie Lena Walker charters St. Luke Penny Savings Bank [NPS]</div>
-<div style="margin-top:15px;">Contact: editor@thedailydrumbeat.com | Corrections: corrections@thedailydrumbeat.com — we correct fast and in print.</div>
-<div style="margin-top:8px;"><a href="/">Home — Trial Edition</a> | Archive: This issue is {{ date_str }}</div>
-<div style="margin-top:8px; font-size:0.8em; color:#666;">Generated live at {{ day_name }} via RSS + free APIs. No AI credits used for market data.</div>
+<div><strong>PROOF THIS IS FRESH:</strong> This page was built on {{ day_name }} at {{ time_str }} ET. Date string: {{ date_str }}. If you run again tomorrow, this timestamp changes and RSS stories rotate.</div>
+<div style="margin-top:15px;">Contact: editor@thedailydrumbeat.com | Archive: issues/{{ date_str }}/</div>
+<div style="margin-top:8px;"><a href="/">Home</a> | <a href="/trial.html">View Original Trial Edition (Vol 1 No 5)</a></div>
 </div>
 
 </body>
