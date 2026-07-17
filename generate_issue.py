@@ -1,6 +1,7 @@
+
 """
-The Daily Drumbeat - Live Trial Runner - FIXED for flat upload
-Works when all files are at repo root: index.html, issue_template.html, generate_issue.py
+The Daily Drumbeat - Live Trial - Dynamic RSS version
+Generates fresh issues with live RSS each run
 """
 import os
 import feedparser
@@ -8,7 +9,7 @@ import requests
 from datetime import datetime
 from jinja2 import Template
 
-def fetch_rss(url, limit=3):
+def fetch_rss(url, limit=2):
     try:
         feed = feedparser.parse(url)
         return feed.entries[:limit]
@@ -25,7 +26,6 @@ def get_mortgage_rate():
             return float(r['observations'][0]['value'])
         except Exception as e:
             print(f"FRED fail: {e}")
-            pass
     return 6.89
 
 def get_crypto():
@@ -46,13 +46,14 @@ def get_markets():
     }
 
 def build_issue():
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    day_name = datetime.now().strftime("%A, %B %d, %Y")
+    now = datetime.now()
+    date_str = now.strftime("%Y-%m-%d")
+    day_name = now.strftime("%A, %B %d, %Y")
     
     RSS_FEEDS = {
-        "policy": ["https://thegrio.com/feed/", "https://www.blackenterprise.com/feed/"],
-        "business": ["https://www.blackenterprise.com/feed/", "https://blavity.com/feed"],
-        "hbcu": ["https://hbcugameday.com/feed/"]
+        "policy": ["https://thegrio.com/feed/", "https://www.blackenterprise.com/feed/", "https://www.theroot.com/rss"],
+        "business": ["https://www.blackenterprise.com/feed/", "https://blavity.com/feed", "https://www.blackbusiness.com/feed/"],
+        "hbcu": ["https://hbcugameday.com/feed/", "https://hbcubuzz.com/feed/"]
     }
     
     policy_entries = []
@@ -71,7 +72,6 @@ def build_issue():
     btc, eth = get_crypto()
     markets = get_markets()
 
-    # Flat layout: template at root
     template_path = "issue_template.html"
     if not os.path.exists(template_path):
         print(f"Missing {template_path}")
@@ -85,11 +85,11 @@ def build_issue():
         btc=btc,
         eth=eth,
         markets=markets,
-        policy=policy_entries[:2],
-        business=business_entries[:2],
-        hbcu=hbcu_entries[:1],
+        policy=policy_entries[:4],
+        business=business_entries[:4],
+        hbcu=hbcu_entries[:2],
         vol="1",
-        no="5"
+        no=str(now.timetuple().tm_yday)
     )
     
     out_path = f"issues/{date_str}/index.html"
@@ -97,7 +97,7 @@ def build_issue():
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
     
-    print(f"Generated {out_path} - Mortgage {mortgage}% BTC ${btc} ETH ${eth}")
+    print(f"Generated {out_path} - {len(policy_entries)} policy, {len(business_entries)} business, {len(hbcu_entries)} hbcu - Mortgage {mortgage}% BTC ${btc}")
 
 if __name__ == "__main__":
     build_issue()
