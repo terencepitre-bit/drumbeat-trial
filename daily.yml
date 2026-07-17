@@ -1,0 +1,36 @@
+name: Daily Drumbeat V2 - Live All
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install feedparser requests jinja2
+      - name: Build fresh issue - LIVE FRED + Finnhub + CoinGecko
+        run: python generate_issue.py
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+      - name: Track used stories (no repeat)
+        run: |
+          git config user.name "drumbeat-bot"
+          git config user.email "bot@thedailydrumbeat.com"
+          git add used_stories.json || true
+          git commit -m "track used stories $(date +%Y-%m-%d)" || true
+          git push || true
+      - name: Deploy to Netlify - Live
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: '.'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
