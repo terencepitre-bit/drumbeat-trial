@@ -1,2 +1,2 @@
 # Drumbeat Trial - Fixed
-This is the clean package. Only 2 emails in footer.
+Clean package - only Corrections@, editor@, Call for prices. No 5+2+1+1.
